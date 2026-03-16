@@ -15,11 +15,13 @@ namespace ControleResidencial.Services.Usuario
     {
         private readonly IMapper _mapper;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ITransacaoRepository _transacaoRepository;
         private readonly IBaseRepository<Infra.Repository.Entity.Usuario> _baseRepository;
-        public UsuarioServices(IBaseRepository<Infra.Repository.Entity.Usuario> baseRepository, IUsuarioRepository usuarioRepository, IMapper mapper)
+        public UsuarioServices(IBaseRepository<Infra.Repository.Entity.Usuario> baseRepository, IUsuarioRepository usuarioRepository, ITransacaoRepository transacaoRepository, IMapper mapper)
         {
             _baseRepository = baseRepository;
             _usuarioRepository = usuarioRepository;
+            _transacaoRepository = transacaoRepository;
             _mapper = mapper;
         }
         // retorna a listagem filtrada de usuarios
@@ -73,6 +75,16 @@ namespace ControleResidencial.Services.Usuario
                         });
 
                     return response;
+                }
+
+                // busca e deleta todas as transações do usuário antes de deletar o usuário
+                var transacoes = await _transacaoRepository.GetByUsuarioId(dto.Id);
+                if (transacoes != null && transacoes.Any())
+                {
+                    foreach (var transacao in transacoes)
+                    {
+                        _transacaoRepository.DeleteAsync(transacao);
+                    }
                 }
 
                 _usuarioRepository.DeleteAsync(data);
