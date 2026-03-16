@@ -55,5 +55,11 @@ namespace ControleResidencial.Controllers
             return CustomResponse(await _usuarioServices.GetByUsuarioId(id));
         }
 
+        [HttpGet("totais")]
+        public async Task<IActionResult> GetTotaisPorUsuario()
+        {
+            return Ok(await _usuarioServices.GetTotaisPorUsuarioAsync());
+        }
+
     }
 }

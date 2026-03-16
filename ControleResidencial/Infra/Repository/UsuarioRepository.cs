@@ -73,6 +73,40 @@ namespace ControleResidencial.Infra.Repository
             };
         }
 
-        
+        // busca totais de receitas e despesas agrupados por usuario
+        public async Task<UsuarioTotaisResponseDTO> GetTotaisPorUsuarioAsync()
+        {
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var transacoes = await _context.Transacoes.ToListAsync();
+
+            var lista = usuarios.Select(u =>
+            {
+                var transacoesUsuario = transacoes.Where(t => t.UsuarioId == u.Id).ToList();
+                var receitas = transacoesUsuario
+                    .Where(t => t.Tipo == "2")
+                    .Sum(t => decimal.TryParse(t.Valor, out var v) ? v : 0);
+                var despesas = transacoesUsuario
+                    .Where(t => t.Tipo == "1")
+                    .Sum(t => decimal.TryParse(t.Valor, out var v) ? v : 0);
+
+                return new UsuarioTotaisDataDTO
+                {
+                    Id = u.Id,
+                    Nome = u.Nome,
+                    TotalReceitas = receitas,
+                    TotalDespesas = despesas,
+                    Saldo = receitas - despesas
+                };
+            }).ToList();
+
+            return new UsuarioTotaisResponseDTO
+            {
+                Lista = lista,
+                TotalReceitas = lista.Sum(x => x.TotalReceitas),
+                TotalDespesas = lista.Sum(x => x.TotalDespesas),
+                Saldo = lista.Sum(x => x.Saldo)
+            };
+        }
+
     }
 }

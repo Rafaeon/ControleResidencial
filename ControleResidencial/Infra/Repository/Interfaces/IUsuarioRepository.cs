@@ -11,5 +11,6 @@ namespace ControleResidencial.Infra.Repository.Interfaces
         void CreateAsync(Usuario usuario);
         void DeleteAsync(Usuario usuario);
         Task<UsuarioFilterResponseDTO> ListUsuarioAsync(UsuarioFilterRequestDTO dto);
+        Task<UsuarioTotaisResponseDTO> GetTotaisPorUsuarioAsync();
     }
 }

@@ -10,5 +10,6 @@ namespace ControleResidencial.Services.Usuario.Interface
         Task<UsuarioResponseDTO> UpdateAsync(UpdateUsuarioRequestDTO dto);
         Task<UsuarioResponseDTO> DeleteAsync(DeleteUsuarioRequestDTO dto);
         Task<UsuarioFilterResponseDTO> GetUsuarioFilterAsync(UsuarioFilterRequestDTO dto);
+        Task<UsuarioTotaisResponseDTO> GetTotaisPorUsuarioAsync();
     }
 }

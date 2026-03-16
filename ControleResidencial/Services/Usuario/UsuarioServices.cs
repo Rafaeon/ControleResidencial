@@ -162,5 +162,10 @@ namespace ControleResidencial.Services.Usuario
                 throw new Exception("An error occurred while retrieving the usuario.", ex);
             }
         }
+        // retorna totais de receitas, despesas e saldo por usuario
+        public async Task<UsuarioTotaisResponseDTO> GetTotaisPorUsuarioAsync()
+        {
+            return await _usuarioRepository.GetTotaisPorUsuarioAsync();
+        }
     }
 }
